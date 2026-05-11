@@ -4,13 +4,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup
+      - uses: actions/checkout@v4
+      - name: Setup NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r21e
+      - name: Compile
         run: |
-          sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;21.4.7075529"
-          ${ANDROID_HOME}/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang++ -shared -fPIC main.cpp -o libOBLIVION.so
-      - name: Save
-        uses: actions/upload-artifact@v3
+          $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-clang++ -shared -fPIC main.cpp -o libOBLIVION.so
+      - name: Upload
+        uses: actions/upload-artifact@v4
         with:
           name: OBLIVION_LIBRARY
           path: libOBLIVION.so
